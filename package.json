@@ -1,0 +1,11 @@
+{
+	"name": "isaac.js",
+	"description": "JS implementation of ISAAC by Yves-Marie K. Rinquin packaged for node.js",
+	"version": "0.1.0",
+	"keywords": ["random", "isaac", "rng", "random number generator", "cryptography"],
+	"main": "isaac",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/RobinStamer/isaac.js"
+	}
+}

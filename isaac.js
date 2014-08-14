@@ -46,9 +46,9 @@
 
 
 /* js string (ucs-2/utf16) to a 32-bit integer (utf-8 chars, little-endian) array */
-String.prototype.toIntArray = function() {
+function toIntArray(_s) {
   var w1, w2, u, r4 = [], r = [], i = 0;
-  var s = this + '\0\0\0'; // pad string to avoid discarding last chars
+  var s = _s + '\0\0\0'; // pad string to avoid discarding last chars
   var l = s.length - 1;
 
   while(i < l) {
@@ -100,7 +100,7 @@ var isaac = (function(){
       r = Array(256), // result array
       gnt = 0;        // generation counter
 
-  seed(Math.random() * 0xffffffff);
+  seed(0 == arguments.length ? Math.random() * 0xffffffff : arguments[0]);
 
   /* private: 32-bit integer safe adder */
   function add(x, y) {
@@ -126,7 +126,7 @@ var isaac = (function(){
     e = f = g = h = 0x9e3779b9; /* the golden ratio */
 
     if(s && typeof(s) === 'string')
-      s = s.toIntArray();
+      s = toIntArray(s);
 
     if(s && typeof(s) === 'number') {
       s = [s];
@@ -221,17 +221,16 @@ var isaac = (function(){
     return {a: acc, b: brs, c: cnt, m: m, r: r};
   }
 
-  /* return class object */
-  return {
-    'reset': reset,
-    'seed':  seed,
-    'prng':  prng,
-    'rand':  rand,
-    'internals': internals
-  };
-})(); /* declare and execute */
+  this.reset	= reset
+  this.seed	= seed
+  this.prng	= prng
+  this.rand	= rand
+  this.internals	= internals
+  this.random	= function() {
+    return 0.5 + this.rand() * 2.3283064365386963e-10; // 2^-32
+  }
+}) /* declare and execute */
 
-/* public: output*/
-isaac.random = function() {
-  return 0.5 + this.rand() * 2.3283064365386963e-10; // 2^-32
-}
+isaac.call(isaac)
+
+module.exports = isaac
